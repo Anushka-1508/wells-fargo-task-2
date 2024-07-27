@@ -1,21 +1,24 @@
 package com.wellsfargo.counselor.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.Set;
-
 @Entity
-public class Advisor {
+public class Client {
 
     @Id
-    @GeneratedValue()
-    private long advisorId;
+    @GeneratedValue
+    private long clientId;
 
-    @OneToMany(mappedBy = "advisor")
+    @ManyToOne
+    @JoinColumn(name ="advisor_id")
+    @JsonBackReference
+    private Advisor advisor;
+
+    @OneToOne(mappedBy = "client")
     @JsonManagedReference
-    private Set<Client> client;
+    private Portfolio portfolio;
 
     @Column(nullable = false)
     private String firstName;
@@ -32,9 +35,7 @@ public class Advisor {
     @Column(nullable = false)
     private String email;
 
-    protected Advisor() {}
-
-    public Advisor(String firstName, String lastName, String address, String phone, String email) {
+    public Client(String firstName, String lastName, String address, String phone, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -42,8 +43,10 @@ public class Advisor {
         this.email = email;
     }
 
-    public Long getAdvisorId() {
-        return advisorId;
+    protected Client() {}
+
+    public long getClientId() {
+        return clientId;
     }
 
     public String getFirstName() {
@@ -86,11 +89,19 @@ public class Advisor {
         this.email = email;
     }
 
-    public Set<Client> getClient() {
-        return client;
+    public Advisor getAdvisor() {
+        return advisor;
     }
 
-    public void setClient(Set<Client> client) {
-        this.client = client;
+    public void setAdvisor(Advisor advisor) {
+        this.advisor = advisor;
+    }
+
+    public Portfolio getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
     }
 }
